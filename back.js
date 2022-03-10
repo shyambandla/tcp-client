@@ -3,7 +3,7 @@
 var tls = require('net');
 var fs = require('fs');
 const forge = require('node-forge');
-const PORT = 1337;
+const PORT = 2626;
 const HOST = '127.0.0.1'
 const salt_len = 16;
 const iv_len = 16;
@@ -66,15 +66,15 @@ console.log(decipher.output.toString());
 var server = tls.createServer(function(socket) {
 
     // Send a friendly message
-    socket.write(encrypt("I am the server sending you a message."));
+    socket.write(encrypt("halt"));
 
     // Print the data that we received
     socket.on('data', function(data) {
         console.log(data);
         decrypt(data);
-        console.log('Received: %s [it is %d bytes long]',
-            data.toString().replace(/(\n)/gm,""),
-            data.length);
+        // console.log('Received: %s [it is %d bytes long]',
+        //     data.toString().replace(/(\n)/gm,""),
+        //     data.length);
 
     });
 

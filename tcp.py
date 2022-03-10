@@ -21,7 +21,7 @@ if (len(sys.argv)>2):
 
 
 salt = get_random_bytes(16)
-key = PBKDF2('my password', salt, 32, count=1000000, hmac_hash_module=SHA256)
+key = PBKDF2('my password', salt, 32, count=100000, hmac_hash_module=SHA256)
 print(b64encode(salt))
 print(b64encode(key))
 def encrypt(plaintext,key, mode):
@@ -32,12 +32,12 @@ def encrypt(plaintext,key, mode):
     # print("iv",len(cipher.iv))
     # iv = b64encode(cipher.iv)
     # print(iv,b64encode(ciphertext))
-    # ct = b64encode(ciphertext)
+    ct = b64encode(ciphertext)
     
     print(len(salt),len(cipher.iv),len(ciphertext))
     print(len(salt+cipher.iv+ciphertext))
-    print(len(b64encode(salt+cipher.iv+ciphertext).decode()))
-    return b64encode(salt+cipher.iv+ciphertext)
+    print(b64encode(salt+cipher.iv+ciphertext).decode())
+    return b64encode(salt+cipher.iv+ciphertext).decode()
 # def decrypt(ciphertext,key, mode):
 #   b64 = json.loads(ciphertext)
 #   iv = b64decode(b64['iv'])
@@ -65,7 +65,9 @@ class TCPClient():
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((ip, int(port)))
-            sock.sendall(encrypt('halt'.encode(),key,AES.MODE_CBC))
+            #print(bytes(encrypt('halt'.encode(),key,AES.MODE_CBC)))
+            sock.sendall(bytes(encrypt('halt'.encode(),key,AES.MODE_CBC),'utf-8'))
+            #sock.sendall(encrypt('halt'.encode(),key,AES.MODE_CBC))
             sock.setblocking(0)
             
                 
@@ -76,7 +78,7 @@ class TCPClient():
             return ex
 
 tcp = TCPClient()
-tcp_response = tcp.sendTcpCommand('172.17.0.231',2626,'halt')
+tcp_response = tcp.sendTcpCommand('127.0.0.1',2626,'halt')
 print(encrypt('halt'.encode(),key,AES.MODE_CBC))
 print(tcp_response)
 
