@@ -35,7 +35,9 @@ const encrypt=(data)=>{
       encrypted: forge.util.encode64(encrypted),
       concatenned: forge.util.encode64(salt + iv + encrypted)
     });
-    
+    console.log(salt);
+    console.log(iv);
+    console.log(encrypted);
     return forge.util.encode64(salt + iv + encrypted);
     }
 const decrypt=(data)=>{
